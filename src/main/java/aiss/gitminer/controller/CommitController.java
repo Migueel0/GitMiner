@@ -1,5 +1,6 @@
 package aiss.gitminer.controller;
 
+import aiss.gitminer.exception.CommitNotFoundException;
 import aiss.gitminer.model.Comment;
 import aiss.gitminer.model.Commit;
 import aiss.gitminer.repository.CommentRepository;
@@ -17,18 +18,22 @@ import java.util.Optional;
 @RequestMapping("gitminer/commits")
 public class CommitController {
 
+    //TODO: Add more operations and exceptions
+
     @Autowired
     CommitRepository repository;
 
     @GetMapping
     public List<Commit> getAllCommits(){
-
         return repository.findAll();
     }
 
     @GetMapping("/{id}")
-    public Commit findById(@PathVariable String id){
+    public Commit findById(@PathVariable String id) throws CommitNotFoundException {
         Optional<Commit> commit = repository.findById(id);
+        if(!commit.isPresent()){
+            throw new CommitNotFoundException();
+        }
         return commit.get();
     }
 }

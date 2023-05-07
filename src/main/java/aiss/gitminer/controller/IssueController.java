@@ -1,5 +1,6 @@
 package aiss.gitminer.controller;
 
+import aiss.gitminer.exception.IssueNotFoundException;
 import aiss.gitminer.model.Issue;
 import aiss.gitminer.repository.IssueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @RequestMapping("gitminer/issues")
 public class IssueController {
 
+    //TODO: Add more operations and exceptions
     @Autowired
     IssueRepository repository;
 
@@ -25,11 +27,16 @@ public class IssueController {
     }
 
     @GetMapping("{/id}")
-    public Issue findIssueById(@PathVariable String id) {
+    public Issue findIssueById(@PathVariable String id) throws IssueNotFoundException {
         Optional<Issue> issue = repository.findById(id);
+        if(!issue.isPresent()){
+            throw new IssueNotFoundException();
+        }
         return issue.get();
     }
 
+
+    //TODO: Change this method in order to be a API filter using PathVariables (Goal: Something like this http://apipath?state=open)
     @GetMapping("{/state}")
     public List<Issue> findIssuesByState(String state) {
         List<Issue> issues = getAllIssues().stream().filter(x->x.getState().equals(state)).collect(Collectors.toList());
