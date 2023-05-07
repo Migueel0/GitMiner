@@ -19,12 +19,12 @@ public class CommentController {
     CommentRepository repository;
 
     @GetMapping
-    public List<Comment> getAll(){
+    public List<Comment> getAllComments(){
         return repository.findAll();
     }
 
     @GetMapping("/{id}")
-    public Comment findById(@PathVariable String id){
+    public Comment findCommentById(@PathVariable String id){
         Optional<Comment> comment = repository.findById(id);
         return comment.get();
     }

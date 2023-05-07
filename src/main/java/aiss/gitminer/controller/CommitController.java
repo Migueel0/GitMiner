@@ -22,6 +22,7 @@ public class CommitController {
 
     @GetMapping
     public List<Commit> getAllCommits(){
+
         return repository.findAll();
     }
 
