@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("gitminer/comments")
+@RequestMapping("/api/gitminer/comments")
 public class CommentController {
 
     //TODO: Add more operations and exceptions

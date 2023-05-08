@@ -2,6 +2,8 @@ package aiss.gitminer.controller;
 
 
 import aiss.gitminer.exception.ProjectNotFoundException;
+import aiss.gitminer.model.Commit;
+import aiss.gitminer.model.Issue;
 import aiss.gitminer.model.Project;
 import aiss.gitminer.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("gitminer/projects")
+@RequestMapping("api/gitminer/projects")
 public class ProjectController {
 
     //TODO: Add more operations and exceptions
@@ -31,6 +33,26 @@ public class ProjectController {
             throw new ProjectNotFoundException();
         }
         return project.get();
+    }
+
+    @GetMapping("/{id}/commits")
+    public List<Commit> findCommitsByProjectId (@PathVariable String id) throws ProjectNotFoundException {
+        Optional<Project> project = repository.findById(id);
+        if(!project.isPresent()){
+            throw new ProjectNotFoundException();
+        }
+        List<Commit> commits =  project.get().getCommits();
+        return commits;
+    }
+
+    @GetMapping("/{id}/issues")
+    public List<Issue> findIssuesByProjectId (@PathVariable String id) throws ProjectNotFoundException {
+        Optional<Project> project = repository.findById(id);
+        if(!project.isPresent()){
+            throw new ProjectNotFoundException();
+        }
+        List<Issue> issues =  project.get().getIssues();
+        return issues;
     }
 
     @ResponseStatus(HttpStatus.CREATED)

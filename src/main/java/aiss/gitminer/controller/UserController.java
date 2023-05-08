@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -19,6 +20,11 @@ public class UserController {
     //TODO: Complete user controller adding operations and exceptions
 
     UserRepository repository;
+    @GetMapping
+    public List<User> findAllUsers(){
+        return repository.findAll();
+    }
+
     @GetMapping("/{id}")
     public User findUserById (@PathVariable String id) throws UserNotFoundException {
         Optional<User> project = repository.findById(id);
