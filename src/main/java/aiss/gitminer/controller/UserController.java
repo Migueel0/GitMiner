@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/gitminer/users")
+@RequestMapping("gitminer/v1/users")
 public class UserController {
 
     //TODO: Complete user controller adding operations and exceptions

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/gitminer/commits")
+@RequestMapping("gitminer/v1/commits")
 public class CommitController {
 
     //TODO: Add more operations and exceptions

@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/gitminer/issues")
+@RequestMapping("gitminer/v1/issues")
 public class IssueController {
 
     //TODO: Add more operations and exceptions
