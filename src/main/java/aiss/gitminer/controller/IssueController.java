@@ -19,10 +19,6 @@ public class IssueController {
     @Autowired
     IssueRepository repository;
 
-    @GetMapping
-    public List<Issue> getAllIssues() {
-        return repository.findAll();
-    }
 
     @GetMapping("/{id}")
     public Issue findIssueById(@PathVariable String id) throws IssueNotFoundException {
@@ -36,9 +32,9 @@ public class IssueController {
     @GetMapping
     public List<Issue> findIssuesByState(@RequestParam(defaultValue = "all") String state) {
         if(state.equals("all")){
-             return getAllIssues();
+             return repository.findAll();
         }else {
-            List<Issue> issues = getAllIssues().stream().filter(x -> x.getState().equals(state)).collect(Collectors.toList());
+            List<Issue> issues = repository.findAll().stream().filter(x -> x.getState().equals(state)).collect(Collectors.toList());
             return issues;
         }
     }
