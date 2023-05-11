@@ -1,7 +1,6 @@
 package aiss.gitminer.controller;
-
-
-import aiss.gitminer.exception.ProjectNotFoundException;
+import aiss.gitminer.exception.projects.ProjectDoesNotCorrespondException;
+import aiss.gitminer.exception.projects.ProjectNotFoundException;
 import aiss.gitminer.model.Commit;
 import aiss.gitminer.model.Issue;
 import aiss.gitminer.model.Project;
@@ -10,15 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("gitminer/v1/projects")
 public class ProjectController {
-
-    //TODO: Add more operations and exceptions
-
     @Autowired
     ProjectRepository repository;
     @GetMapping
@@ -61,7 +58,28 @@ public class ProjectController {
         return repository.save(p);
     }
 
-    //TODO: Add put and delete project
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{id}")
+    public void updateProject(@RequestBody @Valid Project updatedProject, @PathVariable String id) throws ProjectDoesNotCorrespondException {
+        Optional<Project> projectData = repository.findById(id);
+        Project p = projectData.get();
+        if(!p.getId().equals(updatedProject.getId())){
+            throw new ProjectDoesNotCorrespondException();
+        }
+        p.setName(updatedProject.getName());
+        p.setCommits(updatedProject.getCommits());
+        p.setIssues(updatedProject.getIssues());
+
+    }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void deleteProject(@PathVariable String id) throws ProjectNotFoundException {
+        if(repository.existsById(id)){
+            repository.deleteById(id);
+        }else{
+            throw new ProjectNotFoundException();
+        }
+    }
 
 
 }

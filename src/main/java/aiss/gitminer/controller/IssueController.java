@@ -1,6 +1,6 @@
 package aiss.gitminer.controller;
 
-import aiss.gitminer.exception.IssueNotFoundException;
+import aiss.gitminer.exception.issues.IssueNotFoundException;
 import aiss.gitminer.model.Issue;
 import aiss.gitminer.model.User;
 import aiss.gitminer.repository.IssueRepository;

@@ -1,6 +1,6 @@
 package aiss.gitminer.controller;
 
-import aiss.gitminer.exception.CommitNotFoundException;
+import aiss.gitminer.exception.commits.CommitNotFoundException;
 import aiss.gitminer.model.Commit;
 import aiss.gitminer.repository.CommitRepository;
 import org.springframework.beans.factory.annotation.Autowired;

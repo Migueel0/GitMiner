@@ -1,4 +1,4 @@
-package aiss.gitminer.exception;
+package aiss.gitminer.exception.users;
 
 
 import org.springframework.http.HttpStatus;

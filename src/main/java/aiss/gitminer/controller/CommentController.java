@@ -1,6 +1,6 @@
 package aiss.gitminer.controller;
 
-import aiss.gitminer.exception.CommentNotFoundException;
+import aiss.gitminer.exception.comments.CommentNotFoundException;
 import aiss.gitminer.model.Comment;
 import aiss.gitminer.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;

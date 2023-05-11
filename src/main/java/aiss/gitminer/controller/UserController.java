@@ -1,8 +1,6 @@
 package aiss.gitminer.controller;
 
-import aiss.gitminer.exception.ProjectNotFoundException;
-import aiss.gitminer.exception.UserNotFoundException;
-import aiss.gitminer.model.Project;
+import aiss.gitminer.exception.users.UserNotFoundException;
 import aiss.gitminer.model.User;
 import aiss.gitminer.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
