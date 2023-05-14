@@ -62,9 +62,6 @@ public class ProjectController {
         return projectPage.getContent();
     }
 
-
-
-
     @Operation(
             summary = "Retrieve a Project by id",
             description = "Get a Project object by specifying its id",
@@ -140,7 +137,6 @@ public class ProjectController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Project createNewProject(@RequestBody Project p){
-
         return repository.save(p);
     }
 

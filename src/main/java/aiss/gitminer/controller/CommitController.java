@@ -39,9 +39,9 @@ public class CommitController {
                             , mediaType = "application/json" )})
     })
     @GetMapping
-    public List<Commit> getAllCommits(@RequestParam(defaultValue = "0") int page,
-                                      @RequestParam(defaultValue = "10") int size,
-                                      @RequestParam(required = false) String order){
+    public List<Commit> getAllCommits(@Parameter(description = "selected page")@RequestParam(defaultValue = "0") int page,
+                                      @Parameter(description = "page size")@RequestParam(defaultValue = "10") int size,
+                                      @Parameter(description = "Property to order the response, if it starts with -, it will order descending")@RequestParam(required = false) String order){
         Pageable paging;
         Page<Commit> commitPage;
         if(order != null){

@@ -95,7 +95,8 @@ public class UserController {
             @ApiResponse(responseCode = "400", content = {@Content(schema = @Schema())}),
             @ApiResponse(responseCode = "404", content = {@Content(schema = @Schema())})
     })
-    // @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
     public void deleteUser(@Parameter(description = "id of the User to be deleted")@PathVariable String id) throws UserNotFoundException{
         Optional <User> user = repository.findById(id);
         if (!user.isPresent()) {
@@ -112,7 +113,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", content = {@Content(schema = @Schema())})
     })
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/users")
+    @PostMapping()
     public User createAnUser (@Valid @RequestBody User newUser){
         return repository.save(newUser);
     }

@@ -64,9 +64,9 @@ public class IssueController {
     })
     @GetMapping
     public List<Issue> findIssuesByState(@Parameter(description = "State of the issue to be searched") @RequestParam(required = false) String state,
-                                         @RequestParam(defaultValue = "0") int page,
-                                         @RequestParam(defaultValue = "10") int size,
-                                         @RequestParam(required = false)String  order) {
+                                         @Parameter(description = "Selected page")@RequestParam(defaultValue = "0") int page,
+                                         @Parameter(description = "page size")@RequestParam(defaultValue = "10") int size,
+                                         @Parameter(description = "Property to order the response, if it starts with -, it will order descending")@RequestParam(required = false)String  order) {
         Pageable paging;
         Page<Issue> issuePage;
 
@@ -133,9 +133,22 @@ public class IssueController {
         return assignee;
     }
 
+    @Operation(
+            summary = "Find the comments of an Issue",
+            description = "Retrieve the comments of an Issue by specifying its ID",
+            tags = {"issues", "get"}
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Issue.class))),
+            @ApiResponse(responseCode = "404",
+                    content = @Content(schema = @Schema()))
+    })
+
 
     @GetMapping("/{id}/comments")
-    public List<Comment> findIssueComments(@PathVariable String id) throws IssueNotFoundException{
+    public List<Comment> findIssueComments(@Parameter(description = "id of the issue to whose comments are going to be searched")@PathVariable String id) throws IssueNotFoundException{
         Optional<Issue> issue = repository.findById(id);
         if(!issue.isPresent()){
             throw  new IssueNotFoundException();
