@@ -12,6 +12,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +27,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("gitminer/v1/users")
 public class UserController {
-
-    //TODO: Complete user controller adding operations and exceptions
-
     @Autowired
     UserRepository repository;
 
@@ -38,8 +39,28 @@ public class UserController {
                             , mediaType = "application/json" )})
     })
     @GetMapping
-    public List<User> findAllUsers(){
-        return repository.findAll();
+    public List<User> findAllUsers(@RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "10") int size,
+                                   @RequestParam(required = false) String username,
+                                   @RequestParam(required = false) String order){
+        Page<User> userPage;
+        Pageable paging;
+
+        if(order !=null){
+            if(order.startsWith("-")){
+                paging = PageRequest.of(page,size, Sort.by(order.substring(1)).descending());
+            }else{
+                paging = PageRequest.of(page,size,Sort.by(order).ascending());
+            }
+        }else{
+            paging = PageRequest.of(page,size);
+        }
+        if(username != null){
+            userPage = repository.findByUsername(username,paging);
+        }else {
+            userPage = repository.findAll(paging);
+        }
+        return userPage.getContent();
     }
 
 
@@ -63,8 +84,6 @@ public class UserController {
         }
         return project.get();
     }
-
-    //TODO: POST PUT AND DELETE USER
 
     @Operation(
             summary = "Delete an user",

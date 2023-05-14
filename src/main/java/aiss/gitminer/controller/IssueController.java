@@ -13,6 +13,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,11 +27,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("gitminer/v1/issues")
 public class IssueController {
-
-    //TODO: Add more operations and exceptions
     @Autowired
     IssueRepository repository;
-
     @Operation(
             summary = "Retrieve an Issue by id",
             description = "Get an Issue object by specifying its id",
@@ -51,7 +52,7 @@ public class IssueController {
 
     @Operation(
             summary = "Retrieve a List of Issues by state",
-            description = "Get a List of issues by specifying its state",
+            description = "Get a List of issues by specifying its state, default value will retrieve all issues",
             tags = {"issues", "get"}
     )
     @ApiResponses({
@@ -62,13 +63,31 @@ public class IssueController {
                     content = {@Content(schema = @Schema())})
     })
     @GetMapping
-    public List<Issue> findIssuesByState(@Parameter(description = "State of the issue to be searched") @RequestParam(defaultValue = "all") String state) {
-        if(state.equals("all")){
-             return repository.findAll();
-        }else {
-            List<Issue> issues = repository.findAll().stream().filter(x -> x.getState().equals(state)).collect(Collectors.toList());
-            return issues;
+    public List<Issue> findIssuesByState(@Parameter(description = "State of the issue to be searched") @RequestParam(required = false) String state,
+                                         @RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "10") int size,
+                                         @RequestParam(required = false)String  order) {
+        Pageable paging;
+        Page<Issue> issuePage;
+
+        if(order !=null){
+            if(order.startsWith("-")){
+                paging = PageRequest.of(page,size, Sort.by(order.substring(1)).descending());
+            }else{
+                paging = PageRequest.of(page,size,Sort.by(order).ascending());
+            }
+        }else{
+            paging = PageRequest.of(page,size);
         }
+
+        if(state != null){
+            issuePage = repository.findByState(state,paging);
+        }else {
+            issuePage = repository.findAll(paging);
+        }
+
+
+        return issuePage.getContent();
     }
 
     @Operation(
@@ -112,6 +131,17 @@ public class IssueController {
         }
         User assignee = issue.get().getAssignee();
         return assignee;
+    }
+
+
+    @GetMapping("/{id}/comments")
+    public List<Comment> findIssueComments(@PathVariable String id) throws IssueNotFoundException{
+        Optional<Issue> issue = repository.findById(id);
+        if(!issue.isPresent()){
+            throw  new IssueNotFoundException();
+        }
+        List<Comment> comments = issue.get().getComments();
+        return comments;
     }
 
 }
